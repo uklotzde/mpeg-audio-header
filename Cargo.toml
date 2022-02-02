@@ -1,0 +1,17 @@
+[package]
+name = "mpeg-audio-header"
+description = "An all-you-can-eat parser for MPEG audio metadata"
+version = "0.0.1"
+license = "Apache-2.0 OR MIT"
+readme = "README.md"
+repository = "https://github.com/uklotzde/mpeg-audio-header"
+keywords = ["audio", "metadata", "mpeg", "mp3"]
+categories = ["multimedia::audio"]
+edition = "2021"
+
+[dependencies]
+thiserror = "1"
+
+[dev-dependencies]
+anyhow = "1"
+walkdir = "2"
