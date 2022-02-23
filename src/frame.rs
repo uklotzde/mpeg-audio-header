@@ -33,10 +33,16 @@ pub fn maybe_valid_header_word(header_word: u32) -> bool {
     true
 }
 
+/// MPEG Version
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Version {
+    /// MPEG-1
     Mpeg1 = 0,
+
+    /// MPEG-2
     Mpeg2 = 1,
+
+    /// MPEG 2.5
     Mpeg25 = 2,
 }
 
@@ -54,10 +60,16 @@ fn version_from_header_word(header_word: u32) -> Option<Version> {
     }
 }
 
+/// MPEG Audio Layer
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Layer {
+    /// Layer I
     Layer1 = 0,
+
+    /// Layer II
     Layer2 = 1,
+
+    /// Layer III
     Layer3 = 2,
 }
 
@@ -75,11 +87,19 @@ fn layer_from_header_word(header_word: u32) -> Option<Layer> {
     }
 }
 
+/// Channel Mode
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
 pub enum Mode {
+    /// Stereo
     Stereo = 0,
+
+    /// Joint Stereo
     JointStereo = 1,
+
+    /// Dual Channel
     DualChannel = 2,
+
+    /// Mono
     Mono = 3,
 }
 

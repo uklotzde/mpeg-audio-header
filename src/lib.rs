@@ -29,7 +29,9 @@ mod error;
 mod frame;
 mod reader;
 
-use frame::{FrameHeader, Layer, Mode, Version, XING_HEADER_MIN_SIZE, XING_VBRI_HEADER_MIN_SIZE};
+pub use self::frame::{Layer, Mode, Version};
+
+use self::frame::{FrameHeader, XING_HEADER_MIN_SIZE, XING_VBRI_HEADER_MIN_SIZE};
 
 use self::reader::Reader;
 
