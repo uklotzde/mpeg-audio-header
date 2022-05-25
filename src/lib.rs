@@ -2,19 +2,16 @@
 //!
 //! Parse metadata of an MPEG audio stream from VBR (XING/VBRI) and MPEG frame headers.
 
+// rustflags
+#![warn(rust_2018_idioms)]
+#![warn(rust_2021_compatibility)]
+#![warn(missing_debug_implementations)]
+#![warn(unreachable_pub)]
 #![warn(unsafe_code)]
-#![cfg_attr(not(debug_assertions), deny(warnings))]
-#![deny(rust_2018_idioms)]
-#![deny(rust_2021_compatibility)]
-#![deny(missing_debug_implementations)]
-#![deny(missing_docs)]
-#![deny(rustdoc::broken_intra_doc_links)]
-#![deny(clippy::all)]
-#![deny(clippy::explicit_deref_methods)]
-#![deny(clippy::explicit_into_iter_loop)]
-#![deny(clippy::explicit_iter_loop)]
-#![deny(clippy::must_use_candidate)]
-#![cfg_attr(test, deny(warnings))]
+#![warn(clippy::pedantic)]
+#![allow(clippy::module_name_repetitions)]
+#![allow(clippy::cast_possible_truncation)] // TODO: Revisit all occurrences
+#![warn(rustdoc::broken_intra_doc_links)]
 #![cfg_attr(not(test), deny(clippy::panic_in_result_fn))]
 #![cfg_attr(not(debug_assertions), deny(clippy::used_underscore_binding))]
 
@@ -137,6 +134,10 @@ const NANOS_PER_SECOND: u32 = 1_000_000_000;
 impl Header {
     /// Read from a `source` that implements `Read`
     ///
+    /// # Errors
+    ///
+    /// Returns a [`PositionalError`] on any kind of failure.
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -149,6 +150,7 @@ impl Header {
     /// let header = Header::read_from_source(&mut source, ParseMode::IgnoreVbrHeaders).unwrap();
     /// println!("MPEG audio header: {:?}", header);
     /// ```
+    #[allow(clippy::too_many_lines)]
     pub fn read_from_source(
         source: &mut impl Read,
         parse_mode: ParseMode,
@@ -260,8 +262,7 @@ impl Header {
                                 // Finally finish this frame by pretending that we have consumed all bytes
                                 num_bytes_consumed = frame_header
                                     .frame_size
-                                    .map(Into::into)
-                                    .unwrap_or(num_bytes_consumed);
+                                    .map_or(num_bytes_consumed, Into::into);
                             }
                             // https://www.codeproject.com/Articles/8295/MPEG-Audio-Frame-Header#VBRIHeader
                             b"VBRI"
@@ -308,8 +309,7 @@ impl Header {
                                 // Finally finish this frame by pretending that we have consumed all bytes
                                 num_bytes_consumed = frame_header
                                     .frame_size
-                                    .map(Into::into)
-                                    .unwrap_or(num_bytes_consumed);
+                                    .map_or(num_bytes_consumed, Into::into);
                             }
                             _ => {
                                 // Ordinary audio frame
@@ -498,6 +498,10 @@ impl Header {
 
     /// Read from a file
     ///
+    /// # Errors
+    ///
+    /// Returns a [`PositionalError`] on any kind of failure.
+    ///
     /// # Examples
     ///
     /// ```no_run
@@ -515,6 +519,10 @@ impl Header {
     }
 
     /// Read from a file path
+    ///
+    /// # Errors
+    ///
+    /// Returns a [`PositionalError`] on any kind of failure.
     ///
     /// # Examples
     ///

@@ -4,22 +4,17 @@ use super::*;
 
 const TEST_DATA_DIR: &str = "test-data/";
 
+#[allow(clippy::case_sensitive_file_extension_comparisons)]
 fn is_supported_file_extension(entry: &DirEntry) -> bool {
     if entry.file_type().is_dir() {
         return true;
     }
     // symlinks are resolved by follow_symlinks = true
     debug_assert!(entry.file_type().is_file());
-    entry
-        .file_name()
-        .to_str()
-        .map(|file_name| {
-            let file_name = file_name.to_lowercase();
-            file_name.ends_with(".mp3")
-                || file_name.ends_with(".mp2")
-                || file_name.ends_with(".mp1")
-        })
-        .unwrap_or(false)
+    entry.file_name().to_str().map_or(false, |file_name| {
+        let file_name = file_name.to_lowercase();
+        file_name.ends_with(".mp3") || file_name.ends_with(".mp2") || file_name.ends_with(".mp1")
+    })
 }
 
 fn filter_expected_errors(
@@ -50,10 +45,7 @@ fn check_header(path_suffix: &str, parse_mode: ParseMode, header: Header) -> Hea
         "minimp3/fuzz/l3-compl-cut.mp3" => {
             assert_eq!(Duration::from_millis(24), header.total_duration);
         }
-        "mp3-duration/APEv2.mp3" => {
-            assert_eq!(Duration::from_nanos(398_288_964_656), header.total_duration);
-        }
-        "mp3-duration/CBR320.mp3" => {
+        "mp3-duration/CBR320.mp3" | "mp3-duration/VBR0.mp3" => {
             if matches!(parse_mode, ParseMode::PreferVbrHeaders) {
                 assert_eq!(HeaderSource::XingHeader, header.source);
                 assert_eq!(Duration::from_nanos(398_341_224_489), header.total_duration);
@@ -62,16 +54,12 @@ fn check_header(path_suffix: &str, parse_mode: ParseMode, header: Header) -> Hea
                 assert_eq!(Duration::from_nanos(398_341_209_552), header.total_duration);
             }
         }
-        "mp3-duration/ID3v1.mp3" => {
-            assert_eq!(Duration::from_nanos(398_288_964_656), header.total_duration);
-        }
-        "mp3-duration/ID3v2.mp3" => {
-            assert_eq!(Duration::from_nanos(398_288_964_656), header.total_duration);
-        }
-        "mp3-duration/ID3v2WithBadPadding.mp3" => {
-            assert_eq!(Duration::from_nanos(398_288_964_656), header.total_duration);
-        }
-        "mp3-duration/ID3v2WithImage.mp3" => {
+        "mp3-duration/ID3v1.mp3"
+        | "mp3-duration/ID3v2.mp3"
+        | "mp3-duration/ID3v2WithBadPadding.mp3"
+        | "mp3-duration/ID3v2WithImage.mp3"
+        | "mp3-duration/APEv2.mp3"
+        | "mp3-duration/source.mp3" => {
             assert_eq!(Duration::from_nanos(398_288_964_656), header.total_duration);
         }
         "mp3-duration/MPEGFrameTooShort.mp3" => {
@@ -89,15 +77,6 @@ fn check_header(path_suffix: &str, parse_mode: ParseMode, header: Header) -> Hea
         "mp3-duration/Truncated.mp3" => {
             assert_eq!(Duration::from_nanos(206_706_931_024), header.total_duration);
         }
-        "mp3-duration/VBR0.mp3" => {
-            if matches!(parse_mode, ParseMode::PreferVbrHeaders) {
-                assert_eq!(HeaderSource::XingHeader, header.source);
-                assert_eq!(Duration::from_nanos(398_341_224_489), header.total_duration);
-            } else {
-                assert_eq!(HeaderSource::MpegFrameHeaders, header.source);
-                assert_eq!(Duration::from_nanos(398_341_209_552), header.total_duration);
-            }
-        }
         "mp3-duration/VBR9.mp3" => {
             if matches!(parse_mode, ParseMode::PreferVbrHeaders) {
                 assert_eq!(HeaderSource::XingHeader, header.source);
@@ -106,9 +85,6 @@ fn check_header(path_suffix: &str, parse_mode: ParseMode, header: Header) -> Hea
                 assert_eq!(HeaderSource::MpegFrameHeaders, header.source);
                 assert_eq!(Duration::from_nanos(398_367_332_000), header.total_duration);
             }
-        }
-        "mp3-duration/source.mp3" => {
-            assert_eq!(Duration::from_nanos(398_288_964_656), header.total_duration);
         }
         "samples.ffmpeg.org/A-codecs/mp1-sample.mp1" => {
             assert_eq!(Duration::from_millis(588), header.total_duration);

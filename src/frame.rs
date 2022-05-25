@@ -2,9 +2,9 @@ use std::{io::Read, time::Duration};
 
 use crate::{reader::Reader, PositionalError, PositionalResult};
 
-pub const FRAME_HEADER_SIZE: u8 = 4;
-pub const XING_HEADER_MIN_SIZE: u8 = 8;
-pub const XING_VBRI_HEADER_MIN_SIZE: u8 = 22; // 4 + 8 + 22 = 30 (= start of TOC entries)
+pub(crate) const FRAME_HEADER_SIZE: u8 = 4;
+pub(crate) const XING_HEADER_MIN_SIZE: u8 = 8;
+pub(crate) const XING_VBRI_HEADER_MIN_SIZE: u8 = 22; // 4 + 8 + 22 = 30 (= start of TOC entries)
 
 // Tag frame/header sizes (including FRAME_HEADER_SIZE)
 const ID3V1_FRAME_SIZE: u8 = 128;
@@ -14,11 +14,11 @@ const APEV2_HEADER_SIZE: u8 = 32;
 
 const HEADER_WORD_SYNC_MASK: u32 = 0xFFE0_0000;
 
-pub fn is_header_word_synced(header_word: u32) -> bool {
+fn is_header_word_synced(header_word: u32) -> bool {
     (header_word & HEADER_WORD_SYNC_MASK) == HEADER_WORD_SYNC_MASK
 }
 
-pub fn maybe_valid_header_word(header_word: u32) -> bool {
+fn maybe_valid_header_word(header_word: u32) -> bool {
     if version_from_header_word(header_word).is_none()
         || layer_from_header_word(header_word).is_none()
         || !is_valid_bitrate_bits(bitrate_bits_from_header_word(header_word))
@@ -228,18 +228,18 @@ const fn side_information_size(version: Version, mode: Mode) -> u16 {
 }
 
 #[derive(Debug, Clone)]
-pub struct FrameHeader {
-    pub version: Version,
-    pub layer: Layer,
-    pub mode: Mode,
-    pub sample_count: u16,
-    pub sample_rate_hz: u16,
-    pub bitrate_bps: Option<u32>,
-    pub frame_size: Option<u16>,
+pub(crate) struct FrameHeader {
+    pub(crate) version: Version,
+    pub(crate) layer: Layer,
+    pub(crate) mode: Mode,
+    pub(crate) sample_count: u16,
+    pub(crate) sample_rate_hz: u16,
+    pub(crate) bitrate_bps: Option<u32>,
+    pub(crate) frame_size: Option<u16>,
 }
 
 impl FrameHeader {
-    pub fn check_payload_size(&self, payload_size: u16) -> bool {
+    pub(crate) fn check_payload_size(&self, payload_size: u16) -> bool {
         if let Some(frame_size) = self.frame_size {
             payload_size <= frame_size
         } else {
@@ -250,9 +250,7 @@ impl FrameHeader {
     }
 }
 
-pub fn try_read_next_header_word<R: Read>(
-    reader: &mut Reader<'_, R>,
-) -> PositionalResult<Option<u32>> {
+fn try_read_next_header_word<R: Read>(reader: &mut Reader<'_, R>) -> PositionalResult<Option<u32>> {
     let mut next_byte_buf = [0u8; 1];
     let mut initial_byte_offset = reader.position().byte_offset;
     let mut frame_header_word = 0u32;
@@ -266,10 +264,9 @@ pub fn try_read_next_header_word<R: Read>(
                     initial_byte_offset = reader.position().byte_offset;
                     frame_header_word = 0u32;
                     continue;
-                } else {
-                    // Ignore all additional data after the first trailing metadata frame
-                    return Ok(None);
                 }
+                // Ignore all additional data after the first trailing metadata frame
+                return Ok(None);
             }
             if !reader.try_read_exact_until_eof(&mut next_byte_buf)? {
                 return Ok(None);
@@ -292,7 +289,7 @@ pub fn try_read_next_header_word<R: Read>(
     Ok(Some(frame_header_word))
 }
 
-pub fn skip_metadata<R: Read>(
+pub(crate) fn skip_metadata<R: Read>(
     reader: &mut Reader<'_, R>,
     frame_header_bytes: [u8; FRAME_HEADER_SIZE as usize],
 ) -> PositionalResult<bool> {
@@ -305,10 +302,10 @@ pub fn skip_metadata<R: Read>(
                 return Ok(true);
             }
             let flags = id3v2[1];
-            let footer_size = if 0 != (flags & 0b0001_0000) {
-                u32::from(ID3V2_FOOTER_SIZE)
-            } else {
+            let footer_size = if flags & 0b0001_0000 == 0 {
                 0
+            } else {
+                u32::from(ID3V2_FOOTER_SIZE)
             };
             // 32/28-bit synchronization safe integer
             let tag_size = u32::from(id3v2[5])
@@ -340,25 +337,25 @@ pub fn skip_metadata<R: Read>(
     }
 }
 
-pub type UnrecognizedFrameHeaderError = ([u8; FRAME_HEADER_SIZE as usize], PositionalError);
+pub(crate) type UnrecognizedFrameHeaderError = ([u8; FRAME_HEADER_SIZE as usize], PositionalError);
 
-pub type TryReadFrameHeaderOutcome =
+pub(crate) type TryReadFrameHeaderOutcome =
     std::result::Result<Option<FrameHeader>, UnrecognizedFrameHeaderError>;
 
 impl FrameHeader {
-    pub const fn channel_count(&self) -> u8 {
+    pub(crate) const fn channel_count(&self) -> u8 {
         match self.mode {
             Mode::Stereo | Mode::JointStereo | Mode::DualChannel => 2,
             Mode::Mono => 1,
         }
     }
 
-    pub fn side_information_size(&self) -> u16 {
+    pub(crate) fn side_information_size(&self) -> u16 {
         side_information_size(self.version, self.mode)
     }
 
     #[allow(clippy::panic_in_result_fn)] // version/layer/mode unreachable!()
-    pub fn try_read<R: Read>(
+    pub(crate) fn try_read<R: Read>(
         reader: &mut Reader<'_, R>,
     ) -> PositionalResult<TryReadFrameHeaderOutcome> {
         let header_word = if let Some(header_word) = try_read_next_header_word(reader)? {

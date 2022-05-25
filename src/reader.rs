@@ -3,7 +3,10 @@ use std::{
     time::Duration,
 };
 
-use crate::{error::*, PositionalResult};
+use crate::{
+    error::{Error, PositionalError},
+    PositionalResult,
+};
 
 /// Position within a readable source
 #[derive(Debug, Clone)]
@@ -33,13 +36,14 @@ impl ReadPosition {
     }
 }
 
-pub struct Reader<'r, T> {
+pub(crate) struct Reader<'r, T> {
     reader: &'r mut T,
     position: ReadPosition,
 }
 
 impl<'r, T: Read> Reader<'r, T> {
-    pub fn new(reader: &'r mut T) -> Self {
+    #[must_use]
+    pub(crate) fn new(reader: &'r mut T) -> Self {
         Reader {
             reader,
             position: ReadPosition::new(),
@@ -55,7 +59,7 @@ impl<'r, T: Read> Reader<'r, T> {
             .map_err(|e| self.positional_error(e.into()))
     }
 
-    pub fn try_read_exact_until_eof(&mut self, buffer: &mut [u8]) -> PositionalResult<bool> {
+    pub(crate) fn try_read_exact_until_eof(&mut self, buffer: &mut [u8]) -> PositionalResult<bool> {
         self.read_exact(buffer).map(|()| true).or_else(|err| {
             if err.is_unexpected_eof() {
                 Ok(false)
@@ -76,7 +80,7 @@ impl<'r, T: Read> Reader<'r, T> {
         }
     }
 
-    pub fn try_skip_exact_until_eof(&mut self, num_bytes: u64) -> PositionalResult<bool> {
+    pub(crate) fn try_skip_exact_until_eof(&mut self, num_bytes: u64) -> PositionalResult<bool> {
         match self.skip(num_bytes) {
             Ok(skipped_bytes) => {
                 debug_assert!(skipped_bytes <= num_bytes);
@@ -92,19 +96,21 @@ impl<'r, T: Read> Reader<'r, T> {
         }
     }
 
-    pub fn position(&self) -> &ReadPosition {
+    #[must_use]
+    pub(crate) fn position(&self) -> &ReadPosition {
         &self.position
     }
 
-    pub fn add_duration(&mut self, duration: Duration) {
+    pub(crate) fn add_duration(&mut self, duration: Duration) {
         self.position.duration += duration;
     }
 
-    pub fn positional_error(&self, source: Error) -> PositionalError {
+    #[must_use]
+    pub(crate) fn positional_error(&self, source: Error) -> PositionalError {
         let Self { position, .. } = self;
         PositionalError {
             source,
-            position: position.to_owned(),
+            position: position.clone(),
         }
     }
 }
