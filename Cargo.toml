@@ -10,8 +10,8 @@ categories = ["multimedia::audio"]
 edition = "2021"
 
 [dependencies]
-thiserror = "1.0.30"
+thiserror = "1.0.31"
 
 [dev-dependencies]
-anyhow = "1.0.55"
+anyhow = "1.0.57"
 walkdir = "2.3.2"
