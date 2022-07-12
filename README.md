@@ -1,3 +1,6 @@
+<!-- # SPDX-FileCopyrightText: The mpeg-audio-header authors -->
+<!--# SPDX-License-Identifier: CC0-1.0 -->
+
 # mpeg-audio-header
 
 [![Crates.io](https://img.shields.io/crates/v/mpeg-audio-header.svg)](https://crates.io/crates/mpeg-audio-header)
@@ -60,17 +63,16 @@ and [lofty-rs](https://github.com/Serial-ATA/lofty-rs).
 
 ## License
 
-Licensed under either of
+Licensed under the Mozilla Public License 2.0 (MPL-2.0) (see [MPL-2.0.txt](LICENSES/MPL-2.0.txt) or <https://www.mozilla.org/MPL/2.0/>).
 
-- Apache License, Version 2.0 ([LICENSE-APACHE](LICENSE-APACHE) or
-  <https://www.apache.org/licenses/LICENSE-2.0>)
-- MIT license ([LICENSE-MIT](LICENSE-MIT) or
-  <https://opensource.org/licenses/MIT>)
-
-at your option.
+Permissions of this copyleft license are conditioned on making available source code of licensed files and modifications of those files under the same license (or in certain cases, one of the GNU licenses). Copyright and license notices must be preserved. Contributors provide an express grant of patent rights. However, a larger work using the licensed work may be distributed under different terms and without source code for files added in the larger work.
 
 ### Contribution
 
-Unless you explicitly state otherwise, any contribution intentionally submitted
-for inclusion in `mpeg-audio-header` by you, as defined in the Apache-2.0 license,
-shall be dual licensed as above, without any additional terms or conditions.
+Any contribution intentionally submitted for inclusion in the work by you shall be licensed under the Mozilla Public License 2.0 (MPL-2.0).
+
+It is required to add the following header with the corresponding [SPDX short identifier](https://spdx.dev/ids/) to the top of each file:
+
+```rust
+// SPDX-License-Identifier: MPL-2.0
+```

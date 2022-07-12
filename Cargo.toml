@@ -1,8 +1,11 @@
+# SPDX-FileCopyrightText: The mpeg-audio-header authors
+# SPDX-License-Identifier: CC0-1.0
+
 [package]
 name = "mpeg-audio-header"
 description = "An all-you-can-eat parser for MPEG audio metadata"
-version = "0.0.2"
-license = "Apache-2.0 OR MIT"
+version = "0.0.3"
+license = "MPL-2.0"
 readme = "README.md"
 repository = "https://github.com/uklotzde/mpeg-audio-header"
 keywords = ["audio", "metadata", "mpeg", "mp3"]
@@ -13,5 +16,5 @@ edition = "2021"
 thiserror = "1.0.31"
 
 [dev-dependencies]
-anyhow = "1.0.57"
+anyhow = "1.0.58"
 walkdir = "2.3.2"

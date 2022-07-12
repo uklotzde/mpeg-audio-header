@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: The mpeg-audio-header authors
+// SPDX-License-Identifier: MPL-2.0
+
 use mpeg_audio_header::{Header, HeaderSource, Layer, Mode, Version};
 
 #[test]

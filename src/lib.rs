@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: The mpeg-audio-header authors
+// SPDX-License-Identifier: MPL-2.0
+
 //! mpeg-audio-header
 //!
 //! Parse metadata of an MPEG audio stream from VBR (XING/VBRI) and MPEG frame headers.

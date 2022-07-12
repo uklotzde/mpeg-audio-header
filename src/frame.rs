@@ -1,3 +1,6 @@
+// SPDX-FileCopyrightText: The mpeg-audio-header authors
+// SPDX-License-Identifier: MPL-2.0
+
 use std::{io::Read, time::Duration};
 
 use crate::{reader::Reader, PositionalError, PositionalResult};

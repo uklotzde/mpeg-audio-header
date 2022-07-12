@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: The mpeg-audio-header authors
+# SPDX-License-Identifier: CC0-1.0
+
 # Disable some built-in rules
 config:
   default: true

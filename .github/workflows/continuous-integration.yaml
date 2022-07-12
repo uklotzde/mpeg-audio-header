@@ -1,4 +1,12 @@
-name: Continuous integration
+# SPDX-FileCopyrightText: The mpeg-audio-header authors
+# SPDX-License-Identifier: CC0-1.0
+
+# yaml-language-server: $schema=https://json.schemastore.org/github-workflow
+
+name: continuous-integration
+
+permissions:
+  contents: read
 
 on:
   pull_request:
@@ -9,6 +17,7 @@ on:
 env:
   CARGO_INCREMENTAL: 0
   CARGO_TERM_COLOR: always
+  RUST_BACKTRACE: short
 
 jobs:
   continuous-integration:
@@ -17,7 +26,7 @@ jobs:
 
     steps:
       - name: Check out repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -33,32 +42,14 @@ jobs:
         with:
           command: generate-lockfile
 
-      - name: Build tests with default features disabled
+      - name: Build tests
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --workspace --locked --no-default-features --no-run
+          args: --locked --all-targets --no-run
 
-      - name: Build tests with all features enabled
+      - name: Run tests
         uses: actions-rs/cargo@v1
         with:
           command: test
-          args: --workspace --locked --all-features --no-run
-
-      - name: Run tests with all features enabled
-        uses: actions-rs/cargo@v1
-        with:
-          command: test
-          args: --workspace --locked --all-features -- --nocapture --quiet
-
-      - name: Build workspace documentation with all features enabled
-        uses: actions-rs/cargo@v1
-        with:
-          command: doc
-          args: --workspace --locked --all-features
-
-      - name: Build release with default features
-        uses: actions-rs/cargo@v1
-        with:
-          command: build
-          args: --locked --profile release
+          args: --locked --all-targets -- --nocapture --quiet
