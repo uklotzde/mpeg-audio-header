@@ -1,5 +1,5 @@
-<!-- # SPDX-FileCopyrightText: The mpeg-audio-header authors -->
-<!--# SPDX-License-Identifier: CC0-1.0 -->
+<!-- SPDX-FileCopyrightText: The mpeg-audio-header authors -->
+<!-- SPDX-License-Identifier: CC0-1.0 -->
 
 # mpeg-audio-header
 
@@ -8,8 +8,7 @@
 [![Deps.rs](https://deps.rs/repo/github/uklotzde/mpeg-audio-header/status.svg)](https://deps.rs/repo/github/uklotzde/mpeg-audio-header)
 [![Security audit](https://github.com/uklotzde/mpeg-audio-header/actions/workflows/security-audit.yaml/badge.svg)](https://github.com/uklotzde/mpeg-audio-header/actions/workflows/security-audit.yaml)
 [![Continuous integration](https://github.com/uklotzde/mpeg-audio-header/actions/workflows/continuous-integration.yaml/badge.svg)](https://github.com/uklotzde/mpeg-audio-header/actions/workflows/continuous-integration.yaml)
-[![Apache 2.0 licensed](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](./LICENSE-APACHE)
-[![MIT licensed](https://img.shields.io/badge/license-MIT-blue.svg)](./LICENSE-MIT)
+[![License: MPL 2.0](https://img.shields.io/badge/License-MPL_2.0-brightgreen.svg)](https://opensource.org/licenses/MPL-2.0)
 
 Parse metadata of an MPEG audio stream from VBR (XING/VBRI) and MPEG frame headers.
 
