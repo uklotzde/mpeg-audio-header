@@ -1,5 +1,5 @@
 # SPDX-FileCopyrightText: The mpeg-audio-header authors
-# SPDX-License-Identifier: CC0-1.0
+# SPDX-License-Identifier: MPL-2.0
 
 [package]
 name = "mpeg-audio-header"
@@ -13,8 +13,8 @@ categories = ["multimedia::audio"]
 edition = "2021"
 
 [dependencies]
-thiserror = "1.0.31"
+thiserror = "1.0"
 
 [dev-dependencies]
-anyhow = "1.0.58"
-walkdir = "2.3.2"
+anyhow = "1.0"
+walkdir = "2.3"
