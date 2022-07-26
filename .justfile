@@ -30,8 +30,8 @@ setup:
 
 # Upgrade (and update) dependencies
 upgrade:
-    RUST_BACKTRACE=1 cargo upgrade --workspace
     cargo update
+    cargo upgrade --to-lockfile
 
 # Run pre-commit hooks
 pre-commit:
