@@ -398,8 +398,8 @@ impl FrameHeader {
             mode,
             sample_rate_hz,
             sample_count,
-            bitrate_bps: (bitrate_bps > 0).then(|| bitrate_bps),
-            frame_size: (frame_size > 0).then(|| frame_size),
+            bitrate_bps: (bitrate_bps > 0).then_some(bitrate_bps),
+            frame_size: (frame_size > 0).then_some(frame_size),
         })))
     }
 }

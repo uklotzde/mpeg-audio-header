@@ -32,7 +32,6 @@ upgrade: setup
     pre-commit autoupdate
     cargo upgrade
     cargo update
-    cargo upgrade --to-lockfile
 
 # Run pre-commit hooks
 pre-commit:
