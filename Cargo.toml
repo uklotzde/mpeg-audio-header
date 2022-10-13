@@ -4,7 +4,7 @@
 [package]
 name = "mpeg-audio-header"
 description = "An all-you-can-eat parser for MPEG audio metadata"
-version = "0.0.4"
+version = "0.0.5"
 license = "MPL-2.0"
 readme = "README.md"
 repository = "https://github.com/uklotzde/mpeg-audio-header"
@@ -13,8 +13,8 @@ categories = ["multimedia::audio"]
 edition = "2021"
 
 [dependencies]
-thiserror = "1.0"
+thiserror = "1.0.37"
 
 [dev-dependencies]
-anyhow = "1.0"
-walkdir = "2.3"
+anyhow = "1.0.65"
+walkdir = "2.3.2"

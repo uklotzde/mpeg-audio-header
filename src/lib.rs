@@ -204,12 +204,16 @@ impl Header {
                         break;
                     }
                     num_bytes_consumed += u32::from(frame_header.side_information_size());
+                    if !frame_header.check_payload_size(num_bytes_consumed as u16) {
+                        return Err(reader.positional_error(Error::FrameError(
+                            "invalid payload size".to_string(),
+                        )));
+                    }
 
                     let mut is_audio_frame = true;
 
                     // XING header frames may only appear at the start of the file before
                     // the first MPEG frame with audio data.
-                    debug_assert!(frame_header.check_payload_size(num_bytes_consumed as u16));
                     if sum_sample_count == 0
                         && frame_header.check_payload_size(
                             num_bytes_consumed as u16 + u16::from(XING_HEADER_MIN_SIZE),

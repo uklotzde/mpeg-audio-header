@@ -43,11 +43,18 @@ pub enum Error {
     /// Unexpected I/O error occurred
     #[error(transparent)]
     IoError(#[from] std::io::Error),
+
+    #[error("frame error: {0}")]
+    FrameError(String),
 }
 
 impl Error {
     fn is_unexpected_eof(&self) -> bool {
-        let Self::IoError(err) = self;
-        matches!(err.kind(), std::io::ErrorKind::UnexpectedEof)
+        match self {
+            Self::IoError(err) => {
+                matches!(err.kind(), std::io::ErrorKind::UnexpectedEof)
+            }
+            _ => false,
+        }
     }
 }
