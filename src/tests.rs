@@ -102,7 +102,7 @@ fn check_header(path_suffix: &str, parse_mode: ParseMode, header: Header) -> Hea
             }
         }
         _ => {
-            eprintln!("Unchecked result: {:?}", header);
+            eprintln!("Unchecked result: {header:?}");
         }
     }
     header
