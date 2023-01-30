@@ -12,6 +12,15 @@
 
 Parse metadata of an MPEG audio stream from VBR (XING/VBRI) and MPEG frame headers.
 
+## Disclaimer
+
+**_This crate is unmaintained. I recommend to take a look at
+[lofty-rs](https://github.com/Serial-ATA/lofty-rs)
+as a more versatile replacement._**
+
+If you encounter issues or missing features in lofty-rs, please report
+them and they will probably get fixed quickly.
+
 ## Motivation
 
 The specification of the MPEG audio format is very weak. There is no dedicated header that

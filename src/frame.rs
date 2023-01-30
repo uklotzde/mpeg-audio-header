@@ -361,9 +361,7 @@ impl FrameHeader {
     pub(crate) fn try_read<R: Read>(
         reader: &mut Reader<'_, R>,
     ) -> PositionalResult<TryReadFrameHeaderOutcome> {
-        let header_word = if let Some(header_word) = try_read_next_header_word(reader)? {
-            header_word
-        } else {
+        let Some(header_word) = try_read_next_header_word(reader)? else {
             return Ok(Ok(None));
         };
 

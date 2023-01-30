@@ -4,7 +4,7 @@
 [package]
 name = "mpeg-audio-header"
 description = "An all-you-can-eat parser for MPEG audio metadata"
-version = "0.0.5"
+version = "0.0.6"
 license = "MPL-2.0"
 readme = "README.md"
 repository = "https://github.com/uklotzde/mpeg-audio-header"
